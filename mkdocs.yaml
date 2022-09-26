@@ -1,0 +1,5 @@
+site_name: Tekton-MkDocs Sample
+site_url: http://127.0.0.1/
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
