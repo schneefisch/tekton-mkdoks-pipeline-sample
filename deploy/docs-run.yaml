@@ -1,0 +1,32 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: markdown-documents
+#  namespace: default
+spec:
+  type: git
+  params:
+    - name: url
+      value: https://github.com/schneefisch/tekton-mkdoks-pipeline-sample
+    - name: revision
+      value: main
+
+---
+
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: build-docs-run
+spec:
+#  resources:
+#    inputs:
+#      - name: markdown-documents
+#        resourceSpec:
+#          type: git
+#          params:
+#            - name: revision
+#              value: main
+#            - name: url
+#              value: https://github.com/schneefisch/tekton-mkdoks-pipeline-sample
+  pipelineRef:
+    name: build-docs-pipeline

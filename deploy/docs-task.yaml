@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-docs
+spec:
+  resources:
+    inputs:
+      - name: markdown-documents
+        type: git
+  steps:
+    - name: setup
+      image: python:3.9.14
+      script: |
+        #!/bin/sh
+        echo "Is pip still there?"
+        pip --version
+        
+        # install mkdocs
+        pip install mkdocs
+        mkdocs --version
+        
+        echo "Available Docs"
+        ls -al $(resources.inputs.markdown-documents.path)
+
+#    - name: render docs
+#      script: |
+#        #!/bin/sh
+#        echo "Available Docs"
+#        ls -al $(resources.inputs.markdown-documents.path)
