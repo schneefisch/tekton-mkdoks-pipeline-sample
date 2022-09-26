@@ -33,8 +33,18 @@ CoreDNS is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/servi
 Metrics-server is running at https://127.0.0.1:6443/api/v1/namespaces/kube-system/services/https:metrics-server:https/proxy
 ```
 
+install the tekton-cli
+
+    brew install tektoncd-cli
+
 ### Setup Tekton
 
-Run
+Install tekton inside the kubernetes cluster
 
     kubectl apply -f deploy/tekton-release.yaml
+
+Apply the pipeline by running:
+
+```shell
+kubectl apply -f deploy/docs-pipeline.yaml
+```

@@ -1,0 +1,38 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-docs
+spec:
+  steps:
+    - name: setup
+      image: python:3.9.14
+      script: |
+        #!/bin/sh
+        echo "Is pip still there?"
+        pip --version
+        
+        # install mkdocs
+        pip install mkdocs
+        mkdocs --version
+
+---
+
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-docs-pipeline
+spec:
+  tasks:
+    - name: build-docs
+      taskRef:
+        name: build-docs
+
+---
+
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: build-docs-run
+spec:
+  pipelineRef:
+    name: build-docs-pipeline
