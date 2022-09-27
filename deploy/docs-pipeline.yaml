@@ -3,14 +3,16 @@ kind: Pipeline
 metadata:
   name: build-docs-pipeline
 spec:
-#  resources:
-#    - name: markdown-documents
-#      type: git
+  workspaces:
+    - name: files
   tasks:
     - name: build-docs
       taskRef:
         name: build-docs
-#      resources:
-#        inputs:
-#          - name: markdown-documents
-#            resource: markdown-documents
+      workspaces:
+        - name: files
+      params:
+        - name: repository
+          value: https://github.com/schneefisch/tekton-mkdoks-pipeline-sample
+        - name: repository-name
+          value: tekton-mkdoks-pipeline-sample

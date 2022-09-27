@@ -1,37 +1,16 @@
-#apiVersion: tekton.dev/v1beta1
-#kind: PipelineRun
-#metadata:
-#  name: build-docs-run
-#spec:
-##  resources:
-##    inputs:
-##      - name: markdown-documents
-##        resourceSpec:
-##          type: git
-##          params:
-##            - name: revision
-##              value: main
-##            - name: url
-##              value: https://github.com/schneefisch/tekton-mkdoks-pipeline-sample
-#  pipelineRef:
-#    name: build-docs-pipeline
-
----
-
 apiVersion: tekton.dev/v1beta1
-kind: TaskRun
+kind: PipelineRun
 metadata:
   name: build-docs-run
 spec:
-  taskRef:
-    name: build-docs
-  resources:
-    inputs:
-      - name: markdown-documents
-        resourceSpec:
-          type: git
-          params:
-            - name: revision
-              value: main
-            - name: url
-              value: https://github.com/schneefisch/tekton-mkdoks-pipeline-sample
+  pipelineRef:
+    name: build-docs-pipeline
+  workspaces:
+    - name: files
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 200M
