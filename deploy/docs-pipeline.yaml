@@ -3,16 +3,41 @@ kind: Pipeline
 metadata:
   name: build-docs-pipeline
 spec:
+  params:
+    - name: repository
+      type: string
+    - name: repository-name
+      type: string
+    - name: image-reference
+      type: string
+    - name: image-tag
+      type: string
   workspaces:
     - name: files
+    - name: docker-credentials
   tasks:
     - name: build-docs
       taskRef:
         name: build-docs
       workspaces:
         - name: files
+          workspace: files
       params:
         - name: repository
-          value: https://github.com/schneefisch/tekton-mkdoks-pipeline-sample
+          value: $(params.repository)
         - name: repository-name
-          value: tekton-mkdoks-pipeline-sample
+          value: $(params.repository-name)
+
+    - name: create-docker-image
+      taskRef:
+        - name: kaniko
+      workspaces:
+        - name: files
+          workspace: files
+        - name: dockerconfig
+          workspace: docker-credentials
+      params:
+        - name: IMAGE
+          value: $(params.image-reference)
+        - name: IMAGE_TAG
+          value: $(params.image-tag)

@@ -48,3 +48,47 @@ spec:
         
         echo "\nGenerated resources"
         ls -al $(workspaces.files.path)/$(params.repository-name)/site
+
+---
+
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: docker-build
+spec:
+  workspaces:
+    - name: files
+  params:
+    - name: repository-name
+      description: Git Repo name
+    - name: IMAGE
+      description: Name (reference) of the image to build.
+    - name: IMAGE_TAG
+      description: Tag to differentiate the image-version.
+    - name: DOCKERFILE
+      description: Path to the Dockerfile to build.
+      default: ./Dockerfile
+    - name: EXTRA_ARGS
+      default: ""
+    - name: BUILDER_IMAGE
+      description: The image on which builds will run
+#      default: gcr.io/kaniko-project/executor:latest
+      default: docker
+    - name: baseImage
+      description: Base image for GoogleContainerTools/skaffold microservice apps
+      default: BASE=alpine:3.9
+  results:
+    - name: IMAGE_DIGEST
+      description: Digest of the image just built.
+  steps:
+    - name: build-and-push
+      workingDir: $(workspaces.files.path)/$(repository-name)
+      image: $(params.BUILDER_IMAGE)
+      env:
+        - name: DOCKER_CONFIG
+          value: /tekton/home/.docker
+      securityContext:
+        privileged: true
+      script: |
+        echo "Build docker image"
+        docker build --no-cache -t ${IMAGE}:${IMAGE_TAG}

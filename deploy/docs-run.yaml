@@ -14,3 +14,15 @@ spec:
           resources:
             requests:
               storage: 200M
+    - name: docker-credentials
+      secret:
+        secretName: docker-credentials
+  params:
+    - name: repository
+      value: "https://github.com/schneefisch/tekton-mkdoks-pipeline-sample"
+    - name: repository-name
+      value: "tekton-mkdoks-pipeline-sample"
+    - name: image-reference
+      value: "demo-documentation"
+    - name: image-tag
+      value: "v0.1"
