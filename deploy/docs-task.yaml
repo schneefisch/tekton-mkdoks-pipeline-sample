@@ -1,3 +1,18 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: markdown-documents
+#  namespace: default
+spec:
+  type: git
+  params:
+    - name: url
+      value: https://github.com/schneefisch/tekton-mkdoks-pipeline-sample
+    - name: revision
+      value: main
+
+---
+
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
@@ -19,11 +34,18 @@ spec:
         pip install mkdocs
         mkdocs --version
         
+        # show path
         echo "Available Docs"
+        ls -al $(resources.inputs.markdown-documents.path)/docs
+        
+        # mkdocs
+        echo "\n"
+        echo "MKDocs build Help:"
+        mkdocs build --help
+        
+        echo "build docs"
+        mkdocs build -f $(resources.inputs.markdown-documents.path)/mkdocs.yaml -d $(resources.inputs.markdown-documents.path)/site/
+        
+        echo "show generated files"
         ls -al $(resources.inputs.markdown-documents.path)
-
-#    - name: render docs
-#      script: |
-#        #!/bin/sh
-#        echo "Available Docs"
-#        ls -al $(resources.inputs.markdown-documents.path)
+        ls -al $(resources.inputs.markdown-documents.path)/site

@@ -3,3 +3,4 @@ site_url: http://127.0.0.1/
 nav:
   - Home: index.md
   - Architecture: architecture.md
+  - Setup: setup.md
